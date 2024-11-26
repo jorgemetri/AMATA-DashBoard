@@ -14,10 +14,8 @@ def Logo(url):
     )
 
 
-baliza1 = st.Page("Modelos/baliza-model1.py",title="Modelo1",icon=":material/dashboard:")
-modelo1 =  st.Page("Modelos/tora-model1.py",title="Modelo 1",icon=":material/dashboard:")
-modelo2 =  st.Page("Modelos/tora-model2.py",title="Modelo 2",icon=":material/dashboard:")
-modelo3 =  st.Page("Modelos/tora-model3.py",title="Modelo 3",icon=":material/dashboard:")
+baliza1 = st.Page("Modelos/baliza-model1.py",title="Modelo Baliza",icon=":material/dashboard:")
+modelo1 =  st.Page("Modelos/tora-model4.py",title="Modelo Tora",icon=":material/dashboard:")
 aplication = st.Page("Aplication/aplication.py",title="Aplicação",icon=":material/dashboard:")
 
 
@@ -28,7 +26,7 @@ LOGO_URL_LARGE="images/samarco.png"
 pg = st.navigation(
     {
         "Aplicação":[aplication],
-        "Modelos Tora":[modelo1,modelo2,modelo3],
+        "Modelos Tora":[modelo1],
         "Modelos Baliza":[baliza1]
     }
 )

@@ -328,7 +328,7 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
             diameter = min(width, height)
             l1 = width/2
             l2=height/2
-            radius = math.sqrt(l1**2+l2**2)
+            radius = l1*l2
             area_circulo = math.pi * (radius ** 2)
             area_bounding_box = width * height
 
@@ -362,7 +362,7 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
     # Adicionar informações de baliza como colunas separadas
     if baliza_areas:
         total_baliza_area = sum(baliza_areas)
-        fator_m2_px = 0.25/total_baliza_area 
+        fator_m2_px = 0.265225/total_baliza_area 
 
         # Adicionar colunas relacionadas à baliza
         df_areas["Área-Baliza Total (px)"] = total_baliza_area  # Valor único, replicado para todas as linhas
@@ -383,31 +383,11 @@ def ExecutarModeloFotos(pathimage):
     # Inferir os resultados
 
 
-    if st.session_state["tora"] == "Modelo 3":
-         results = InferirModelo(
-            pathweights=r"Aplication\best.pt",
-            img=img,
-            conf=0.25
-        )
-    elif st.session_state["tora"] == "Modelo 1":
-         results = InferirModelo(
-            pathweights=r"Aplication\model1.pt",
-            img=img,
-            conf=0.25
-        )
-    elif st.session_state["tora"] == "Modelo 2":
-        results = InferirModelo(
-            pathweights=r"Aplication\model2.pt",
-            img=img,
-            conf=0.25
-        )
-    else:
-        results = InferirModelo(
+    results = InferirModelo(
             pathweights=r"Aplication\model4.pt",
             img=img,
             conf=0.25
         )
-    print(st.session_state["tora"])
 
 
     x = pathimage.split("\\")[-1]
@@ -435,11 +415,11 @@ def ExibirValores():
             st.dataframe(valor, height=600, use_container_width=True, hide_index=True)
 def SideBar():
     if "tora" not in st.session_state:
-        st.session_state["tora"] = "Modelo 1"
+        st.session_state["tora"] = "Modelo Tora"
     if "baliza" not in st.session_state:
-        st.session_state["baliza"] = "Modelo 1"
-    st.sidebar.selectbox("🌲 Modelos Tora:", ["Modelo 1","Modelo 2", "Modelo 3", "Modelo 4"],key="tora")
-    st.sidebar.selectbox("⬛ Modelos Baliza:", ["Modelo 1"],key="baliza")
+        st.session_state["baliza"] = "Modelo Baliza"
+    st.sidebar.selectbox("🌲 Modelos Tora:", ["Modelo Tora"],key="tora")
+    st.sidebar.selectbox("⬛ Modelos Baliza:", ["Modelo Baliza"],key="baliza")
 
 #Menu de exibição da aplicação-----------------------------------------------------------------
 SideBar()
