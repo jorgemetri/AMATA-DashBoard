@@ -333,7 +333,7 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
             l1 = width/2
             l2=height/2
             radius = l1*l2
-            area_circulo = math.pi * (radius ** 2)
+            area_circulo = math.pi * radius
             area_bounding_box = width * height
 
             data.append({
@@ -378,14 +378,16 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
     bounding_box_sum = df_areas['Área da Bounding Box (m^2)'].sum()
     circle_area_sum = df_areas['Área do Círculo (m^2)'].sum()
 
-    # Cria um dicionário para representar a nova linha
     new_row = {
         'Área da Bounding Box (m^2)': bounding_box_sum,
-        'Área do Círculo (m^2)': circle_area_sum,
+        'Área do Círculo (m^2)': circle_area_sum
     }
 
-    # Adiciona a nova linha ao DataFrame
-    df_areas = df_areas.append(new_row, ignore_index=True)
+    # Crie um DataFrame com a nova linha
+    new_row_df = pd.DataFrame([new_row])
+
+    # Use pd.concat para adicionar a nova linha ao DataFrame original
+    df_areas = pd.concat([df_areas, new_row_df], ignore_index=True)
 
     cv2.imwrite(output_path, img_with_points)
     return output_path, total_objects, df_areas

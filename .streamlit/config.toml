@@ -2,8 +2,9 @@
 primaryColor="#7A6C3B"
 backgroundColor="#FAFAE1"
 secondaryBackgroundColor="#145550"
-textColor="#31333F"
+textColor="#333333"  
 font="sans serif"
+
 
 [browser]
 gatherUsageStats = false
