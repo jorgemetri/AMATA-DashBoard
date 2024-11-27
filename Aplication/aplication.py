@@ -11,6 +11,9 @@ from ultralytics import YOLO
 import os
 import io
 
+
+
+
 from PIL import Image, ExifTags
 @st.cache_data
 def load_model(model):
@@ -151,6 +154,7 @@ def ValidacaoModelo(pathmodel):
   metrics.box.map50  # map50
   metrics.box.map75  # map75
   metrics.box.maps  # a list contains map50-95 of each category
+@st.cache_data
 def InferirModelo(pathweights,img,conf):
   model = YOLO(pathweights)
   results = model.predict(source=img,conf=conf)
@@ -370,6 +374,18 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
         df_areas["Fator [m^2]/[px] (Formatado)"] = f"{fator_m2_px:.2e}" 
         df_areas['Área do Círculo (m^2)'] = df_areas['Área do Círculo (px)'] * fator_m2_px
         df_areas['Área da Bounding Box (m^2)'] = df_areas['Área da Bounding Box (px)'] * fator_m2_px
+        # Calcula a soma das colunas
+    bounding_box_sum = df_areas['Área da Bounding Box (m^2)'].sum()
+    circle_area_sum = df_areas['Área do Círculo (m^2)'].sum()
+
+    # Cria um dicionário para representar a nova linha
+    new_row = {
+        'Área da Bounding Box (m^2)': bounding_box_sum,
+        'Área do Círculo (m^2)': circle_area_sum,
+    }
+
+    # Adiciona a nova linha ao DataFrame
+    df_areas = df_areas.append(new_row, ignore_index=True)
 
     cv2.imwrite(output_path, img_with_points)
     return output_path, total_objects, df_areas
@@ -433,7 +449,7 @@ with tab1:
     
     
     
-    if st.button("Prever"):
+    if st.button("Rodar Modelo"):
         pasta = r"Aplication\images_upload"
         caminhos_dos_arquivos = listar_caminhos_arquivos(pasta)
         array = []

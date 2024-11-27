@@ -1,11 +1,10 @@
 [theme]
-primaryColor="#FF4B4B"
-backgroundColor="#FFFFFF"
-secondaryBackgroundColor="#F0F2F6"
+primaryColor="#7A6C3B"
+backgroundColor="#FAFAE1"
+secondaryBackgroundColor="#145550"
 textColor="#31333F"
 font="sans serif"
 
 [browser]
 gatherUsageStats = false
 layout = "wide"
-
