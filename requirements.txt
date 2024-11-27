@@ -3,5 +3,6 @@ pandas
 numpy
 altair
 streamlit-extras
-opencv-python
+opencv-python-headless
 ultralytics
+openpyxl

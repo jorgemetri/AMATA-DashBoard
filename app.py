@@ -10,31 +10,17 @@ import time
 def Logo(url):
     st.logo(
         url,
-        link="https://streamlit.io/gallery",size="large"
+        link="https://innovatechgestao.com.br/",size="large"
     )
 
-custom_css = """
-<style>
-/* Altera a cor dos títulos na sidebar */
-[data-testid="stSidebar"] .css-qrbaxs p {
-    color: #FF6347; /* Define a cor para o texto dos títulos */
-    font-weight: bold; /* Opcional: deixa o texto em negrito */
-    font-size: 18px; /* Opcional: ajusta o tamanho da fonte */
-}
-</style>
-"""
-
-# Aplica o CSS ao Streamlit
-st.markdown(custom_css, unsafe_allow_html=True)
-
+st.set_page_config(layout="wide")
 baliza1 = st.Page("Modelos/baliza-model1.py",title="Modelo Baliza",icon=":material/dashboard:")
 modelo1 =  st.Page("Modelos/tora-model4.py",title="Modelo Tora",icon=":material/dashboard:")
 aplication = st.Page("Aplication/aplication.py",title="Aplicação",icon=":material/dashboard:")
 
 
-LOGO_URL_LARGE="images/samarco.png"
-#Logo(LOGO_URL_LARGE)
-
+LOGO_URL_LARGE="log1.png"
+Logo(LOGO_URL_LARGE)
 
 pg = st.navigation(
     {

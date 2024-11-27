@@ -4,23 +4,23 @@ import numpy as np
 import altair as alt
 from streamlit_extras.metric_cards import style_metric_cards
 
-st.header("Modelo Tora 🤖📊")
+st.header("Modelo Tora 📊")
+
 st.divider()
 st.header("Resultado do Modelo")
 @st.cache_data
 def load_data():
-    data = pd.read_csv(r"Modelos\tora-model4\train\results.csv")
+    data = pd.read_csv("Modelos/tora-model4/train/results.csv")
     return data
 @st.cache_data
 def Metricas(data):
     col1, col2, col3 = st.columns(3)
 
-    col1.metric(label="metrics/precision(B)", value=f"{round(np.average(data["metrics/precision(B)"]),2)}%", delta=9)
-    col2.metric(label="metrics/recall(B)", value=f"{round(np.average(data["metrics/recall(B)"]),2)}%", delta=2)
-    col3.metric(label="metrics/mAP50-95(B)", value=f"{round(np.average(data["metrics/mAP50-95(B)"]),2)}%", delta=4)
+    col1.metric(label="metrics/precision(B)", value=f"{round(np.average(data['metrics/precision(B)']), 2)}%", delta=9)
+    col2.metric(label="metrics/recall(B)", value=f"{round(np.average(data['metrics/recall(B)']), 2)}%", delta=2)
+    col3.metric(label="metrics/mAP50-95(B)", value=f"{round(np.average(data['metrics/mAP50-95(B)']), 2)}%", delta=4)
 
-    style_metric_cards(border_left_color="#145550")
-
+    style_metric_cards(background_color="#262730",border_left_color="#FFFFF",border_color="black")
 
 @st.cache_data
 def Grafico_Rotulo(data, x_column, y_column, titulo):
@@ -66,8 +66,8 @@ def Grafico_Rotulo(data, x_column, y_column, titulo):
     st.altair_chart(combined_chart, use_container_width=True)
 
 def images():
-    st.image(r"Modelos\tora-model4\val\val_batch0_labels.jpg")
-    st.image(r"Modelos\tora-model4\val\val_batch0_pred.jpg")
+    st.image("Modelos/tora-model4/val/val_batch0_labels.jpg")
+    st.image("Modelos/tora-model4/val/val_batch0_pred.jpg")
 
 
 data = load_data()

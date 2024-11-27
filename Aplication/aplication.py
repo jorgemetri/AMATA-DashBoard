@@ -10,6 +10,7 @@ import math
 from ultralytics import YOLO
 import os
 import io
+import openpyxl
 
 
 
@@ -114,8 +115,8 @@ def UploadImage():
                 st.error("Nenhuma imagem selecionada!")
     with col2:
         if st.button("Limpar Imagens"):
-            num1=apagar_imagens(r"Aplication\images_download")
-            num2=apagar_imagens(r"Aplication\images_upload")
+            num1=apagar_imagens("Aplication/images_download")
+            num2=apagar_imagens("Aplication/images_upload")
             if num1+num2 > 0:
                 st.success("Imagens apagadas!")
             else:
@@ -345,7 +346,7 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
             total_objects += 1
 
     # Detecção de balizas
-    model_path = r'Aplication\baliza.pt'
+    model_path = 'Aplication/baliza.pt'
     baliza_model = YOLO(model_path)
     baliza_results = baliza_model.predict(source=img, conf=0.25)
 
@@ -367,7 +368,6 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
     if baliza_areas:
         total_baliza_area = sum(baliza_areas)
         fator_m2_px = 0.265225/total_baliza_area 
-
         # Adicionar colunas relacionadas à baliza
         df_areas["Área-Baliza Total (px)"] = total_baliza_area  # Valor único, replicado para todas as linhas
        # df_areas["Fator [m^2]/[px]"] = fator_m2_px  # Valor único
@@ -402,15 +402,15 @@ def ExecutarModeloFotos(pathimage):
 
 
     results = InferirModelo(
-            pathweights=r"Aplication\model4.pt",
+            pathweights="Aplication/model4.pt",
             img=img,
             conf=0.25
         )
 
-
-    x = pathimage.split("\\")[-1]
+    print(pathimage)
+    x = pathimage.split("/")[-1]
     output_path = f"Aplication/images_download/{x}"
-    aba = pathimage.split("\\")[-1]
+    aba = pathimage.split("/")[-1]
     # Exibir e salvar os pontos na imagem, calcular áreas e obter o DataFrame
     output_file, count, df_areas = ExibirPontosTora1(results, img, output_path=output_path)
     print(f"Imagem salva em: {output_file}")
@@ -418,7 +418,8 @@ def ExecutarModeloFotos(pathimage):
     print("Dataframe foi adicionado!")
     st.session_state["datas"][str(aba)]=df_areas
     #print(df_areas)
-    #st.dataframe(df_areas,hide_index=True)   
+    st.dataframe(df_areas,hide_index=True)   
+@st.cache_data
 def ExibirValores():    
     """
         Função para exibir os valores dos dataframes correspondente as imagens
@@ -441,7 +442,10 @@ def SideBar():
 
 #Menu de exibição da aplicação-----------------------------------------------------------------
 SideBar()
+
+
 tab1, tab2,tab3,tab4 = st.tabs(["📊 Aplicação", "📥 Imagens Upadas","📥 Imagens Resultado","📥 Baixar dados"])
+
 with tab1:
     st.title("Aplicação :chart_with_upwards_trend:")
     st.divider()
@@ -452,7 +456,7 @@ with tab1:
     
     
     if st.button("Rodar Modelo"):
-        pasta = r"Aplication\images_upload"
+        pasta = "Aplication/images_upload"
         caminhos_dos_arquivos = listar_caminhos_arquivos(pasta)
         array = []
         if len(caminhos_dos_arquivos) > 0:
@@ -461,13 +465,14 @@ with tab1:
             st.success("Modelo Inferiu em todas as imagens com sucesso!")
         else:
             st.error("Não existem imagens para realizar a inferência!")
+    
     ExibirValores() 
-
+   
 
     
 with tab2:
     st.write("📥 Imagens Upadas")
-    pasta = r"Aplication\images_upload"
+    pasta = "Aplication/images_upload"
     caminhos_dos_arquivos = listar_caminhos_arquivos(pasta)
     array = []
     if len(caminhos_dos_arquivos)> 0:
@@ -480,12 +485,11 @@ with tab2:
         for caminho in caminhos_dos_arquivos:
             caption.append(caminho.split("\\")[-1])
         print(array)
-        st.image(array, caption=caption, use_column_width=True)
-
-    
+        st.image(array, caption=caption, use_container_width=True)
+      
 with tab3:
     st.write("")
-    pasta = r"Aplication\images_download"
+    pasta = "Aplication/images_download"
     caminhos_dos_arquivos = listar_caminhos_arquivos(pasta)
     array = []
     if len(caminhos_dos_arquivos) > 0:
@@ -498,7 +502,7 @@ with tab3:
         for caminho in caminhos_dos_arquivos:
             caption.append(caminho.split("\\")[-1])
         print(array)
-        st.image(array, caption=caption, use_column_width=True)
+        st.image(array, caption=caption, use_container_width=True)
 with tab4:
     st.write("Baixar dados")
     if st.button("Baixar Planilha com dados"):
