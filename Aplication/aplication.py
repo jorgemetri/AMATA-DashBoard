@@ -392,46 +392,63 @@ def ExibirPontosTora1(results, img, output_path="resultado_com_pontos.jpg"):
     cv2.imwrite(output_path, img_with_points)
     return output_path, total_objects, df_areas
 
+# Função para executar modelo e armazenar resultados
 def ExecutarModeloFotos(pathimage):
-    if "datas" not in st.session_state:
-        st.session_state["datas"]={}
-
+    if "_datas" not in st.session_state:
+        st.session_state["_datas"] = {}
 
     img = cv2.imread(pathimage)
+
     # Inferir os resultados
-
-
     results = InferirModelo(
-            pathweights="Aplication/model4.pt",
-            img=img,
-            conf=0.25
-        )
+        pathweights="Aplication/model4.pt",
+        img=img,
+        conf=0.25
+    )
 
-    print(pathimage)
     x = pathimage.split("/")[-1]
     output_path = f"Aplication/images_download/{x}"
     aba = pathimage.split("/")[-1]
+
     # Exibir e salvar os pontos na imagem, calcular áreas e obter o DataFrame
     output_file, count, df_areas = ExibirPontosTora1(results, img, output_path=output_path)
     print(f"Imagem salva em: {output_file}")
     print(f"Total de objetos preditos: {count}")
     print("Dataframe foi adicionado!")
-    st.session_state["datas"][str(aba)]=df_areas
-    #print(df_areas)
-    st.dataframe(df_areas,hide_index=True)   
-@st.cache_data
-def ExibirValores():    
-    """
-        Função para exibir os valores dos dataframes correspondente as imagens
 
+    # Armazenar no session_state
+    st.session_state["_datas"][str(aba)] = df_areas
+    store_value("datas")  # Salva os dados para persistência
+
+    # Exibir DataFrame na interface
+    st.dataframe(df_areas, hide_index=True)
+
+   
+
+# Funções de persistência
+def store_value(key):
+    st.session_state[key] = st.session_state["_" + key]
+
+def load_value(key):
+    if key in st.session_state:
+        st.session_state["_" + key] = st.session_state[key]
+
+# Função para exibir valores com lógica de persistência
+@st.cache_data
+def ExibirValores():
     """
-    if "datas" not in st.session_state:
-        st.session_state["datas"] = {}
-    else:
-        for chave, valor in st.session_state["datas"].items():
-            st.divider()
-            st.header(chave,divider="green")
-            st.dataframe(valor, height=600, use_container_width=True, hide_index=True)
+    Função para exibir os valores dos DataFrames correspondentes às imagens.
+    """
+    load_value("datas")  # Carrega os dados armazenados na sessão
+
+    if "_datas" not in st.session_state:
+        st.session_state["_datas"] = {}
+
+    for chave, valor in st.session_state["_datas"].items():
+        st.divider()
+        st.header(chave, divider="green")
+        st.dataframe(valor, height=600, use_container_width=True, hide_index=True)
+
 def SideBar():
     if "tora" not in st.session_state:
         st.session_state["tora"] = "Modelo Tora"
