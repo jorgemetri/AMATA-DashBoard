@@ -493,6 +493,7 @@ with tab3:
     caminhos_dos_arquivos = listar_caminhos_arquivos(pasta)
     array = []
     if len(caminhos_dos_arquivos) > 0:
+        print("Foram adicionadas imagens em download")
         for images in caminhos_dos_arquivos:
             image = correct_image_orientation(Image.open(images))
             image = image.resize((image.width, image.height), Image.LANCZOS)
@@ -500,7 +501,7 @@ with tab3:
         # Exibir as imagens no Streamlit
         caption = []
         for caminho in caminhos_dos_arquivos:
-            caption.append(caminho.split("\\")[-1])
+            caption.append(caminho.split("/")[-1])
         print(array)
         st.image(array, caption=caption, use_container_width=True)
 with tab4:
